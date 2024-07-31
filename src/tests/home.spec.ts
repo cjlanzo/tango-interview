@@ -10,7 +10,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   await loginPage.login(email, password);
 });
 
-test.only('should be able to create a new folder and see it displayed', async ({
+test('should be able to create a new folder and see it displayed as a list', async ({
   page,
 }) => {
   const homePage = new HomePage(page);
@@ -18,7 +18,9 @@ test.only('should be able to create a new folder and see it displayed', async ({
   // Use this to ensure we don't try to create a duplicate folder
   // Would use a library like `faker` given more time
   const folderNumber = Math.random();
+  const folderName = 'Test ' + folderNumber;
 
-  await homePage.createFolder('Test ' + folderNumber);
-  await page.pause();
+  await homePage.createFolder(folderName);
+  await homePage.changeDisplayToList();
+  await expect(homePage.folders.getFolder(folderName)).toBeVisible();
 });
